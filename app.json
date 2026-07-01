@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "French Made Simple",
+    "slug": "french-made-simple",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "frenchmadesimple",
+    "userInterfaceStyle": "light",
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
