@@ -2,7 +2,7 @@ import courseOneCards from "../data/course1.json";
 import courseTwoCards from "../data/course2.json";
 import { grammarTopics } from "../data/grammarTopics";
 
-const CARDS_PER_LEVEL = 25;
+const CARDS_PER_LEVEL = 250;
 
 const courses = [
   {
