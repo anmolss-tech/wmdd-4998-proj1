@@ -21,112 +21,40 @@ const courses = [
 
 
 export function getSentenceLevel(courseId, levelId) {
-  const levels = getSentenceLevels();
-
-  for (let index = 0; index < levels.length; index++) {
-    if (isSameSentenceLevel(levels[index], courseId, levelId)) {
-      return levels[index];
-    }
-  }
-  return undefined;
+  return getSentenceLevels().find(level => level.courseId === courseId && level.id === levelId);
 }
-
-function isSameSentenceLevel(level, courseId, levelId) {
-  return level.courseId === courseId && level.id === levelId;
-}
-
 
 export function getSentenceLevels() {
-  const allLevels = [];
-
-  for (let index = 0; index < courses.length; index++) {
-    addCourseLevels(allLevels, courses[index]);
-  }
-
-  return allLevels;
-}
-
-function addCourseLevels(allLevels, course) {
-  const courseLevels = makeLevels(course);
-
-  for (let index = 0; index < courseLevels.length; index++) {
-    allLevels.push(courseLevels[index]);
-  }
+  return courses.reduce((allLevels, course) => {
+    return allLevels.concat(makeLevels(course));
+  }, []);
 }
 
 function makeLevels(course) {
   const levels = [];
-  let levelCards = [];
-  let levelNumber = 1;
 
-  for (let index = 0; index < course.cards.length; index++) {
-    levelCards.push(course.cards[index]);
+  for (let i = 0; i < course.cards.length; i += CARDS_PER_LEVEL) {
+    const cards = course.cards.slice(i, i + CARDS_PER_LEVEL);
+    const levelNumber = levels.length + 1;
 
-    if (shouldCreateLevel(levelCards, index, course.cards.length)) {
-      addLevel(levels, course, levelNumber, levelCards);
-
-      levelCards = [];
-      levelNumber++;
-    }
+    levels.push({
+      id: String(levelNumber),
+      courseId: course.id,
+      title: `${course.title} - Level ${levelNumber}`,
+      subtitle: `${cards.length} cards`,
+      startCard: cards[0]?.eng || "French practice",
+      cards
+    });
   }
 
   return levels;
 }
 
-
-function shouldCreateLevel(cards, cardIndex, totalCards) {
-  const levelIsFull = cards.length === CARDS_PER_LEVEL;
-  const isLastCard = cardIndex === totalCards - 1;
-
-  return levelIsFull || isLastCard;
-}
-
-
-function addLevel(levels, course, levelNumber, cards) {
-  const level = createLevel(course, levelNumber, cards);
-  levels.push(level);
-}
-
-
-function createLevel(course, levelNumber, cards) {
-  return {
-    id: String(levelNumber),
-    courseId: course.id,
-    title: course.title + " - Level " + levelNumber,
-    subtitle: cards.length + " cards",
-    startCard: getStartCardText(cards),
-    cards: cards
-  };
-}
-
-
-
+// 4. Simplified grammar lookups using .find()
 export function getGrammarTopic(topicId) {
-  for (let index = 0; index < grammarTopics.length; index++) {
-    if (isSameGrammarTopic(grammarTopics[index], topicId)) {
-      return grammarTopics[index];
-    }
-  }
-
-  return undefined;
+  return grammarTopics.find(topic => topic.id === topicId);
 }
-
-
-
-function isSameGrammarTopic(topic, topicId) {
-  return topic.id === topicId;
-}
-
 
 export function getGrammarTopics() {
   return grammarTopics;
 }
-
-function getStartCardText(cards) {
-  if (cards.length > 0 && cards[0].eng) {
-    return cards[0].eng;
-  }
-
-  return "French practice";
-}
-
