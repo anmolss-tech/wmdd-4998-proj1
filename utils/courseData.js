@@ -21,6 +21,7 @@ const courses = [
 
 export function getSentenceLevels() {
   return courses.flatMap(makeLevels);
+  // return courses.flatMap((course) => makeLevels(course));
 }
 
 function makeLevels(course) {
